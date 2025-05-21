@@ -1,0 +1,412 @@
+[
+  {
+    "id": 1,
+    "category": "coffee",
+    "name": "아이스아메리카노",
+    "price": "1,500",
+    "img": "/img/coffee/1.아이스아메리카노.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 2,
+    "category": "coffee",
+    "name": "카페모카",
+    "price": "3,000",
+    "img": "/img/coffee/10.카페라떼.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 3,
+    "category": "coffee",
+    "name": " 헤이즐넛 아메리카노",
+    "price": "2,000",
+    "img": "/img/coffee/2. 헤이즐넛 아메리카노.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 4,
+    "category": "coffee",
+    "name": "카페라떼",
+    "price": "2,500",
+    "img": "/img/coffee/3.카페라떼.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 5,
+    "category": "coffee",
+    "name": "바닐라라떼",
+    "price": "3,500",
+    "img": "/img/coffee/4.바닐라라떼.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 6,
+    "category": "coffee",
+    "name": "카푸치노",
+    "price": "4,000",
+    "img": "/img/coffee/5.카푸치노.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 7,
+    "category": "coffee",
+    "name": "달고나라떼 ",
+    "price": "4,000",
+    "img": "/img/coffee/6.달고나라떼 .png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 8,
+    "category": "coffee",
+    "name": "연유라떼",
+    "price": "3,500",
+    "img": "/img/coffee/7.연유라떼.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 9,
+    "category": "coffee",
+    "name": "아인슈페너",
+    "price": "4,000",
+    "img": "/img/coffee/8.아인슈페너.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 10,
+    "category": "coffee",
+    "name": "카라멜마끼아또",
+    "price": "4,500",
+    "img": "/img/coffee/9.카라멜마끼아또.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 11,
+    "category": "dessert",
+    "name": "감자빵",
+    "price": "3,000",
+    "img": "/img/dessert/1.감자빵.png",
+    "option": []
+  },
+  {
+    "id": 12,
+    "category": "dessert",
+    "name": "초코칩쿠키",
+    "price": "1,500",
+    "img": "/img/dessert/10.초코칩쿠키.png",
+    "option": []
+  },
+  {
+    "id": 13,
+    "category": "dessert",
+    "name": "크로칸슈",
+    "price": "2,000",
+    "img": "/img/dessert/2.크로칸슈.png",
+    "option": []
+  },
+  {
+    "id": 14,
+    "category": "dessert",
+    "name": "스모어쿠키",
+    "price": "2,000",
+    "img": "/img/dessert/3.스모어쿠키.png",
+    "option": []
+  },
+  {
+    "id": 15,
+    "category": "dessert",
+    "name": "초코스모어쿠키",
+    "price": "2,000",
+    "img": "/img/dessert/4.초코스모어쿠키.png",
+    "option": []
+  },
+  {
+    "id": 16,
+    "category": "dessert",
+    "name": "샌드위치",
+    "price": "3,000",
+    "img": "/img/dessert/5.샌드위치.png",
+    "option": []
+  },
+  {
+    "id": 17,
+    "category": "dessert",
+    "name": "슈크림빵",
+    "price": "2,500",
+    "img": "/img/dessert/6.슈크림빵.png",
+    "option": []
+  },
+  {
+    "id": 18,
+    "category": "dessert",
+    "name": "크로플",
+    "price": "2,500",
+    "img": "/img/dessert/7.크로플.png",
+    "option": []
+  },
+  {
+    "id": 19,
+    "category": "dessert",
+    "name": "치즈케익",
+    "price": "4,000",
+    "img": "/img/dessert/8.치즈케익.png",
+    "option": []
+  },
+  {
+    "id": 20,
+    "category": "dessert",
+    "name": "초코케익",
+    "price": "4,000",
+    "img": "/img/dessert/9.초코케익.png",
+    "option": []
+  },
+  {
+    "id": 21,
+    "category": "tea",
+    "name": "얼그레이",
+    "price": "3,000",
+    "img": "/img/tea/1.얼그레이.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 22,
+    "category": "tea",
+    "name": "애플유자티",
+    "price": "3,000",
+    "img": "/img/tea/10.애플유자티.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 23,
+    "category": "tea",
+    "name": "녹차",
+    "price": "3,000",
+    "img": "/img/tea/2.녹차.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 24,
+    "category": "tea",
+    "name": "캐모마일",
+    "price": "3,000",
+    "img": "/img/tea/3.캐모마일.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 25,
+    "category": "tea",
+    "name": "페퍼민트",
+    "price": "3,000",
+    "img": "/img/tea/4.페퍼민트.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 26,
+    "category": "tea",
+    "name": "레몬차",
+    "price": "3,500",
+    "img": "/img/tea/5.레몬차.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 27,
+    "category": "tea",
+    "name": "유자차",
+    "price": "3,500",
+    "img": "/img/tea/6.유자차.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 28,
+    "category": "tea",
+    "name": "자몽차",
+    "price": "3,500",
+    "img": "/img/tea/7.자몽차.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 29,
+    "category": "tea",
+    "name": "허니자몽티",
+    "price": "3,500",
+    "img": "/img/tea/8.허니자몽티.png",
+    "option": {
+      "temperature": ["HOT", "COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 30,
+    "category": "tea",
+    "name": "복숭아아이스티",
+    "price": "2,500",
+    "img": "/img/tea/9.복숭아아이스티.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 31,
+    "category": "beverage",
+    "name": "딸기라떼",
+    "price": "3,500",
+    "img": "/img/beverage/1.딸기라떼.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 32,
+    "category": "beverage",
+    "name": "초코칩프라페",
+    "price": "4,000",
+    "img": "/img/beverage/10.초코칩프라페.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 33,
+    "category": "beverage",
+    "name": "청포도에이드",
+    "price": "3,500",
+    "img": "/img/beverage/2.청포도에이드.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 34,
+    "category": "beverage",
+    "name": "망고에이드",
+    "price": "3,500",
+    "img": "/img/beverage/3.망고에이드.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 35,
+    "category": "beverage",
+    "name": "딸기스무디",
+    "price": "4,000",
+    "img": "/img/beverage/4.딸기스무디.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 36,
+    "category": "beverage",
+    "name": "망고스무디",
+    "price": "4,000",
+    "img": "/img/beverage/5.망고스무디.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 37,
+    "category": "beverage",
+    "name": "블루베리스무디",
+    "price": "4,000",
+    "img": "/img/beverage/6.블루베리스무디.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 38,
+    "category": "beverage",
+    "name": "수박주스",
+    "price": "4,000",
+    "img": "/img/beverage/7.수박주스.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 39,
+    "category": "beverage",
+    "name": "그린티스무디",
+    "price": "4,000",
+    "img": "/img/beverage/8.그린티스무디.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  },
+  {
+    "id": 40,
+    "category": "beverage",
+    "name": "쿠키프라페",
+    "price": "4,000",
+    "img": "/img/beverage/9.쿠키프라페.png",
+    "option": {
+      "temperature": ["COLD"],
+      "size": ["S", "L"]
+    }
+  }
+]
