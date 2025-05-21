@@ -62,8 +62,8 @@ const MenuPage = () => {
                   borderRadius: '8px',
                 }}
               />
-              <h4>{item.name}</h4>
-              <p>{item.price}원</p>
+              <Name>{item.name}</Name>
+              <Price>{item.price}원</Price>
             </ItemBox>
           ))}
         </CommonGrid>
@@ -87,7 +87,7 @@ export default MenuPage;
 
 const Wrapper = styled.div`
   background-color: #213ebb;
-  // min-height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -121,3 +121,13 @@ const ItemBox = styled.div`
     padding: 0.75rem;
   }
 `;
+
+
+const Name = styled.h4`
+  color:black;
+`
+
+const Price = styled.p`
+  color:black;
+
+`

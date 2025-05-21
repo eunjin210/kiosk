@@ -67,7 +67,7 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
             <QuantityButton onClick={decrease} style={{ cursor: 'pointer' }}>
               –
             </QuantityButton>
-            <span>{quantity}</span>
+            <span style={{ color: 'black' }}>{quantity}</span>
             <QuantityButton onClick={increase} style={{ cursor: 'pointer' }}>
               +
             </QuantityButton>
@@ -150,6 +150,7 @@ const InfoRow = styled.div`
 
 const MenuName = styled.div`
   font-size: 1.3rem;
+  color: black;
   font-weight: bold;
 `;
 
@@ -218,6 +219,7 @@ const TempOptionRow = styled.div`
 `;
 
 const Label = styled.div`
+color:black;
   font-size: 1.3rem;
   font-weight: bold;
   margin-right: 1rem;

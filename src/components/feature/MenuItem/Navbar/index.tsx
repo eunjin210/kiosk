@@ -83,6 +83,7 @@ const CategoryButton = styled.button`
   background-color: transparent;
   cursor: pointer;
   outline: none;
+  color: black;
 
   &.active {
     background-color: #213ebb;

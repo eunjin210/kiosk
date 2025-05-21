@@ -61,7 +61,7 @@ const OrderList = () => {
                   >
                     –
                   </Button>
-                  <span>{item.quantity}</span>
+                  <span style={{ color: 'black' }}>{item.quantity}</span>
                   <Button onClick={() => handleQuantityChange(item.cartId, 1)}>
                     +
                   </Button>
@@ -138,6 +138,7 @@ const Right = styled.div`
 `;
 
 const Title = styled.div`
+  color: black;
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
@@ -167,6 +168,7 @@ const Item = styled.li`
 `;
 
 const Text = styled.div`
+color: black;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -181,6 +183,7 @@ const Control = styled.div`
 `;
 
 const Summary = styled.div`
+color:black;
   height: 50%;
   display: flex;
   justify-content: center;
