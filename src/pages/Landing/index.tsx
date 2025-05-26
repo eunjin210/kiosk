@@ -3,17 +3,30 @@ import styled from '@emotion/styled';
 import Button from '@/components/Common/Button';
 import Header from '@/components/Common/Header';
 
+import { useDispatch } from 'react-redux';
+import { setMode } from '@/store/modeSlice';
+
 const LandingPage = () => {
+  const dispatch = useDispatch();
+
   return (
     <Wrapper>
       <Header></Header>
       <Link to="/menu">
-        <Button size="xlarge" theme="blue">
+        <Button
+          size="xlarge"
+          theme="blue"
+          onClick={() => dispatch(setMode('default'))}
+        >
           매장에서 먹어요
         </Button>
       </Link>
       <Link to="/menu">
-        <Button size="xlarge" theme="blue">
+        <Button
+          size="xlarge"
+          theme="blue"
+          onClick={() => dispatch(setMode('simple'))}
+        >
           포장해서 갈래요
         </Button>
       </Link>

@@ -54,8 +54,8 @@ const Container = styled.button<Pick<Props, 'theme' | 'size'>>(
     }
     return {
       borderRadius: '15px',
-      height: '25px',
-      fontSize: '15px',
+      height: '2rem',
+      fontSize: '1.5rem',
     };
   },
 

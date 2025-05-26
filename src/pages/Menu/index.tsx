@@ -7,11 +7,16 @@ import CommonGrid from '@/components/Common/Grid';
 import OrderList from '@/components/feature/OrderList';
 import ItemModal from '@/components/feature/ItemModal';
 import Overlay from '@/components/Common/overlay';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 const MenuPage = () => {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [filter, setFilter] = useState<MenuCategoryType>('COFFEE');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem>([]);
+
+  const selectType = useSelector((state: RootState) => state.mode);
+  const columns = selectType === 'default' ? 4 : 3;
 
   useEffect(() => {
     fetch('/mock/menuData.json')
@@ -46,7 +51,7 @@ const MenuPage = () => {
       <MenuNavbar currentFilter={filter} setFilter={setFilter} />
       <Content>
         <CommonGrid
-          columns={4}
+          columns={columns}
           gap={'2rem'}
           style={{ margin: '0 auto', paddingTop: '2rem' }}
         >
@@ -62,8 +67,8 @@ const MenuPage = () => {
                   borderRadius: '8px',
                 }}
               />
-              <Name>{item.name}</Name>
-              <Price>{item.price}원</Price>
+              <Name mode={selectType}>{item.name}</Name>
+              <Price mode={selectType}>{item.price}원</Price>
             </ItemBox>
           ))}
         </CommonGrid>
@@ -78,7 +83,7 @@ const MenuPage = () => {
           <Overlay isOpen={isModalOpen} />
         </>
       )}
-      <OrderList />
+      <OrderList mode={selectType} />
     </Wrapper>
   );
 };
@@ -93,9 +98,20 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 const Content = styled.main`
+  width: 100%;
+  max-height: 60vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding-bottom: 2rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ItemBox = styled.div`
@@ -122,12 +138,15 @@ const ItemBox = styled.div`
   }
 `;
 
+const Name = styled.h4<{ mode: 'default' | 'simple' }>`
+  font-size: ${(props) => (props.mode === 'default' ? '1rem' : '1.8rem')};
+  color: black;
+  margin: 0;
+`;
 
-const Name = styled.h4`
-  color:black;
-`
-
-const Price = styled.p`
-  color:black;
-
-`
+const Price = styled.p<{ mode: 'default' | 'simple' }>`
+  font-size: ${(props) => (props.mode === 'default' ? '1rem' : '1.8rem')};
+  color: ${(props) => (props.mode === 'default' ? 'black' : '#007aff')};
+  font-weight: ${(props) => (props.mode === 'default' ? 'none' : 'bold')};
+  margin: 10px;
+`;

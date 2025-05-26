@@ -1,22 +1,31 @@
 import styled from '@emotion/styled';
 import { MenuCategoryType } from '@/type';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 type Props = {
   currentFilter: MenuCategoryType;
   setFilter: (category: MenuCategoryType) => void;
 };
-const categories: MenuCategoryType[] = ['COFFEE', 'TEA', 'BEVERAGE', 'DESSERT'];
+const categoryPairs: [MenuCategoryType, string][] = [
+  ['COFFEE', '커피'],
+  ['TEA', '차'],
+  ['BEVERAGE', '음료'],
+  ['DESSERT', '빵'],
+];
 const MenuNavbar = ({ currentFilter, setFilter }: Props) => {
+  const selectType = useSelector((state: RootState) => state.mode);
   return (
     <Wrapper>
       <ScrollContainer>
-        {categories.map((cat) => (
+        {categoryPairs.map(([eng, kor]) => (
           <CategoryButton
-            key={cat}
-            onClick={() => setFilter(cat)}
-            className={currentFilter === cat ? 'active' : ''}
+            key={eng}
+            onClick={() => setFilter(eng)}
+            className={currentFilter === eng ? 'active' : ''}
+            selectType={selectType}
           >
-            {cat}
+            {selectType === 'default' ? eng : kor}
           </CategoryButton>
         ))}
       </ScrollContainer>
@@ -51,13 +60,13 @@ const ScrollContainer = styled.div`
   display: flex;
   gap: 3rem;
   overflow-x: auto;
-  scroll-behavior: smooth;
   padding: 1rem;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
     display: none;
   }
+
   @media (max-width: 768px) {
     gap: 2rem;
     padding: 0.75rem;
@@ -69,10 +78,10 @@ const ScrollContainer = styled.div`
   }
 `;
 
-const CategoryButton = styled.button`
+const CategoryButton = styled.button<{ selectType: 'default' | 'simple' }>`
   flex: 0 0 auto;
-  font-size: clamp(1rem, 3vw, 1.5rem);
-  display: flex
+  // font-size: clamp(1rem, 3vw, 1.5rem);
+  display: flex;
   align-items: center;
   justify-content: center;
   height: 3rem;
@@ -85,6 +94,9 @@ const CategoryButton = styled.button`
   outline: none;
   color: black;
 
+  font-size: ${({ selectType }) =>
+    selectType === 'simple' ? '2rem' : 'clamp(1rem, 3vw, 1.5rem)'};
+
   &.active {
     background-color: #213ebb;
     color: white;
@@ -96,12 +108,12 @@ const CategoryButton = styled.button`
     border-bottom-right-radius: 0;
     outline: none;
   }
-    
+
   &:focus {
     outline: none;
   }
 
-    @media (max-width: 768px) {
+  @media (max-width: 768px) {
     height: 2.8rem;
     font-size: clamp(0.9rem, 3vw, 1.3rem);
   }
@@ -109,29 +121,5 @@ const CategoryButton = styled.button`
   @media (max-width: 480px) {
     height: 2.5rem;
     font-size: clamp(0.85rem, 3vw, 1.2rem);
-  }
-`;
-
-const NextButton = styled.button`
-  position: relative;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-  background: white;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  margin: 0 2.5rem 0 3rem;
-  @media (max-width: 768px) {
-    font-size: 1.3rem;
-    width: 35px;
-    margin: 0 1.8rem 0 2rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-    width: 30px;
-    margin: 0 1.2rem 0 1.5rem;
   }
 `;

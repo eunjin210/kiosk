@@ -2,7 +2,7 @@
   {
     "id": 1,
     "category": "coffee",
-    "name": "아이스아메리카노",
+    "name": "아메리카노",
     "price": "1,500",
     "img": "/img/coffee/1.아이스아메리카노.png",
     "option": {
@@ -24,7 +24,7 @@
   {
     "id": 3,
     "category": "coffee",
-    "name": " 헤이즐넛 아메리카노",
+    "name": "디카페인커피",
     "price": "2,000",
     "img": "/img/coffee/2. 헤이즐넛 아메리카노.png",
     "option": {

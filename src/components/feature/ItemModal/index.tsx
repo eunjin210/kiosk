@@ -14,17 +14,38 @@ type Props = {
   selectedItem: MenuItem;
 };
 
+const tempPairs: ['HOT' | 'COLD', string][] = [
+  ['HOT', '뜨겁게'],
+  ['COLD', '차갑게'],
+];
+
+const sizePairs: ['S' | 'L', string][] = [
+  ['S', '작은컵'],
+  ['L', '큰 컵'],
+];
+
 const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const mode = useSelector((state: RootState) => state.mode);
   const [selectedTemp, setSelectedTemp] = useState<'HOT' | 'COLD' | null>(null);
   const [selectedSize, setSelectedSize] = useState<'S' | 'L' | null>(null);
   const [quantity, setQuantity] = useState(1);
-  console.log(cartItems);
   const increase = () => setQuantity((prev) => prev + 1);
   const decrease = () => {
     if (quantity > 0) setQuantity((prev) => prev - 1);
   };
+
+  const getTempLabel = (temp: 'HOT' | 'COLD') => {
+    const pair = tempPairs.find(([eng]) => eng === temp);
+    return mode === 'simple' && pair ? pair[1] : temp;
+  };
+
+  const getSizeLabel = (temp: 'S' | 'L') => {
+    const pair = sizePairs.find(([eng]) => eng === temp);
+    return mode === 'simple' && pair ? pair[1] : temp;
+  };
+
+  const [warningMessage, setWarningMessage] = useState('');
 
   const handleAddToCart = () => {
     if (
@@ -32,7 +53,8 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
       ((selectedItem.option.temperature && !selectedTemp) ||
         (selectedItem.option.size && !selectedSize))
     ) {
-      alert('온도와 사이즈를 선택해주세요!');
+      setWarningMessage('온도와 사이즈를 선택해주세요!');
+      setTimeout(() => setWarningMessage(''), 2000);
       return;
     }
 
@@ -76,6 +98,7 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
         </InfoRow>
         {selectedItem.option?.temperature && (
           <OptionRow>
+            <Label>온도 :</Label>
             <TempOptionRow>
               {selectedItem.option.temperature.map((temp) => (
                 <TempButton
@@ -84,7 +107,7 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
                   onClick={() => setSelectedTemp(temp)}
                   color={temp === 'HOT' ? 'red' : 'blue'}
                 >
-                  {temp}
+                  {getTempLabel(temp)}
                 </TempButton>
               ))}
             </TempOptionRow>
@@ -92,7 +115,7 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
         )}
         {selectedItem.option?.size && (
           <OptionRow>
-            <Label>사이즈</Label>
+            <Label>사이즈 :</Label>
             <TempOptionRow>
               {selectedItem.option.size.map((sz) => (
                 <SizeBox
@@ -100,8 +123,8 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
                   active={selectedSize === sz}
                   onClick={() => setSelectedSize(sz)}
                 >
-                  <img src="/icon _coffee cup_.svg" width={30} />
-                  <span>{sz}</span>
+                  <img src="/icon _coffee cup_.svg" width={50} />
+                  <span>{getSizeLabel(sz)}</span>
                 </SizeBox>
               ))}
             </TempOptionRow>
@@ -116,6 +139,7 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
           </Button>
         </ButtonWrapper>
       </ModalContainer>
+      {warningMessage && <Warning>{warningMessage}</Warning>}
     </>
   );
 };
@@ -127,7 +151,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   z-index: 999;
   background-color: white;
-  width: 50vw;
+  width: 60vw;
   height: 60vh;
   position: fixed;
   top: 50%;
@@ -149,7 +173,7 @@ const InfoRow = styled.div`
 `;
 
 const MenuName = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: black;
   font-weight: bold;
 `;
@@ -167,34 +191,21 @@ const QuantityBox = styled.div`
   display: flex;
   font-weight: bold;
   gap: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   align-items: center;
 `;
 
 const Price = styled.div`
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: #007aff;
 `;
 
-const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  flex-direction: raw;
-  width: 100%;
-  height: 20%;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-`;
 const OptionRow = styled.div`
   display: flex;
-  justify-content: flex-start; /* ← 왼쪽 정렬 */
+  justify-content: flex-start;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
   align-items: center;
   padding: 0 5rem;
 `;
@@ -211,6 +222,13 @@ const TempButton = styled.button<{ active: boolean; color: string }>`
   font-size: 2rem;
 `;
 
+const Label = styled.div`
+  color: black;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-right: 1rem;
+`;
+
 const TempOptionRow = styled.div`
   display: flex;
   justify-content: center;
@@ -218,23 +236,69 @@ const TempOptionRow = styled.div`
   flex: 1;
 `;
 
-const Label = styled.div`
-color:black;
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-right: 1rem;
-`;
-
-const SizeOptionRow = styled.div`
+const ButtonWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
   display: flex;
+  flex-direction: raw;
+  width: 100%;
+  height: 20%;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
+  margin-top: 2rem;
 `;
 
 const SizeBox = styled.div<{ active: boolean }>`
   border: 2px solid ${({ active }) => (active ? '#007aff' : '#ccc')};
+  width: 4rem;
+  height: auto;
   padding: 0.5rem;
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${({ active }) => (active ? '#B5D0FF' : 'white')};
   color: ${({ active }) => (active ? '#007aff' : '#333')};
+
+  span {
+    font-weight: bold;
+    margin-top: 0.3rem;
+  }
+`;
+
+const Warning = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 80, 80, 0.95);
+  color: white;
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeInOut 2s ease-out;
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -55%);
+    }
+    10% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -45%);
+    }
+  }
 `;
