@@ -1,5 +1,5 @@
 export const RouterPath = {
-  Landing: '/',
-  MenuPage: '/menu',
-  // OrderPage: '/menu/order',
+  Calibration: '/',
+  Landing: '/home',
+  MenuPage: '/home/menu',
 };

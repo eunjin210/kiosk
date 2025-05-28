@@ -12,7 +12,7 @@ const LandingPage = () => {
   return (
     <Wrapper>
       <Header></Header>
-      <Link to="/menu">
+      <Link to="/home/menu">
         <Button
           size="xlarge"
           theme="blue"
@@ -21,7 +21,7 @@ const LandingPage = () => {
           매장에서 먹어요
         </Button>
       </Link>
-      <Link to="/menu">
+      <Link to="/home/menu">
         <Button
           size="xlarge"
           theme="blue"

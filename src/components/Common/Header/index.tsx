@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Header = () => {
   return (
     <Wrapper>
-      <Link to="/">
+      <Link to="/home">
         <ResponsiveFaHome color="#213ebb" />
       </Link>
       <ResponsiveGrLanguage color="#213ebb" />
