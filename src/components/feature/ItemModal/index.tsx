@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { addItem } from '@/store/cartSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { useEffect } from 'react';
 
 type Props = {
   isModalOpen: boolean;
@@ -69,6 +70,15 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
     );
     handleModalClose();
   };
+
+  useEffect(() => {
+    if (selectedItem.option?.temperature) {
+      setSelectedTemp(selectedItem.option.temperature[0]);
+    }
+    if (selectedItem.option?.size) {
+      setSelectedSize(selectedItem.option.size[0]);
+    }
+  }, [selectedItem]);
 
   return (
     <>

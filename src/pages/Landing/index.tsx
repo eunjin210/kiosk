@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import Button from '@/components/Common/Button';
 import Header from '@/components/Common/Header';
-
 import { useDispatch } from 'react-redux';
 import { setMode } from '@/store/modeSlice';
 
@@ -30,6 +29,15 @@ const LandingPage = () => {
           포장해서 갈래요
         </Button>
       </Link>
+      {/* <Link to="/accuracy">
+        <Button
+          size="xlarge"
+          theme="blue"
+          onClick={() => dispatch(setMode('simple'))}
+        >
+          정확도 분석
+        </Button>
+      </Link> */}
     </Wrapper>
   );
 };

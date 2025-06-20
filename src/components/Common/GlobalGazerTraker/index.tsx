@@ -4,6 +4,7 @@ const GlobalGazeTracker = () => {
   const [isActive, setIsActive] = useState(false);
   const hoverTargetRef = useRef<HTMLElement | null>(null);
   const hoverStartRef = useRef<number | null>(null);
+  // console.log(window.webgazer.addMouseEventListeners.toString());
 
   useEffect(() => {
     const dot = document.createElement('div');
@@ -18,6 +19,7 @@ const GlobalGazeTracker = () => {
       pointer-events: none;
       display: none;
     `;
+
     document.body.appendChild(dot);
 
     const interval = setInterval(() => {
@@ -27,10 +29,18 @@ const GlobalGazeTracker = () => {
       )
         return;
       const prediction = window.webgazer.getSmoothedPrediction();
-      if (!prediction) return;
 
-      const x = prediction.x - 10;
-      const y = prediction.y - 10;
+      if (!prediction) {
+        console.log('예측값이 없어요');
+        return;
+      }
+      // else {
+      //   console.log('예측값');
+      //   console.log(isActive);
+      // }
+
+      const x = prediction.x;
+      const y = prediction.y;
 
       dot.style.left = `${x}px`;
       dot.style.top = `${y}px`;
@@ -46,16 +56,19 @@ const GlobalGazeTracker = () => {
           hoverTargetRef.current.dispatchEvent(
             new Event('mouseleave', { bubbles: true })
           );
+          hoverTargetRef.current.style?.setProperty('outline', 'none');
         }
+
         if (el) {
           el.dispatchEvent(new Event('mouseenter', { bubbles: true }));
+          // el.style?.setProperty('outline', '3px solid #00ff00');
         }
         hoverTargetRef.current = el;
         hoverStartRef.current = Date.now();
       } else if (
         el &&
         hoverStartRef.current &&
-        Date.now() - hoverStartRef.current > 1000
+        Date.now() - hoverStartRef.current > 500
       ) {
         el.click();
         hoverStartRef.current = null;
