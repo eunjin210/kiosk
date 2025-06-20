@@ -3,13 +3,17 @@ import FaceRecognition from '../FaceRecognition';
 import CalibrationPage from '../Webgazer';
 const FaceGazeSetupPage = () => {
   const [mode, setMode] = useState<'face' | 'calibration'>('face');
-
+  const [distance, setDistance] = useState<number | null>(null);
   return (
     <>
       {mode === 'face' ? (
-        <FaceRecognition mode={mode} setMode={setMode} />
+        <FaceRecognition
+          mode={mode}
+          setMode={setMode}
+          setDistance={setDistance}
+        />
       ) : (
-        <CalibrationPage />
+        <CalibrationPage distance={distance} />
       )}
     </>
   );

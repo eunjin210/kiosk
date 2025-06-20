@@ -1,6 +1,22 @@
 import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import { writer, reader } from '@/utils/serialPort.ts';
+
+type SerialPort = {
+  open: (options: { baudRate: number }) => Promise<void>;
+  writable: WritableStream<Uint8Array>;
+  readable: ReadableStream<Uint8Array>;
+  close: () => Promise<void>;
+};
+
+declare global {
+  interface Navigator {
+    serial: {
+      requestPort: () => Promise<SerialPort>;
+    };
+  }
+}
 interface CalibrationData {
   index: number;
   target_X: number;
@@ -23,22 +39,47 @@ interface Point {
   y: number;
   timestamp: number;
 }
+interface CalibrationPageProps {
+  distance: number | null;
+}
 
-const CalibrationPage = () => {
+const CalibrationPage = ({ distance: propsDistance }: CalibrationPageProps) => {
   const navigate = useNavigate();
   const [calibrationFinished, setCalibrationFinished] = useState(false);
   const [accuracy, setAccuracy] = useState<string | null>(null);
   const [accuracyTesting, setAccuracyTesting] = useState(false);
   const [accuracyTestDone, setAccuracyTestDone] = useState(false);
 
+  async function sendDistanceToArduino(distance: number | null) {
+    if (!writer || !reader) {
+      console.warn('⚠️ 시리얼 포트가 아직 연결되지 않았습니다.');
+      return;
+    }
+
+    if (distance === null) {
+      console.warn('⚠️ distance 값이 null입니다.');
+      return;
+    }
+
+    const sleep = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(2000);
+
+    const data = `${distance}\n`;
+    console.log('보낼 거리 데이터', data);
+    await writer?.write(new TextEncoder().encode(data));
+    console.log(`📤 아두이노에 전송: ${data}`);
+  }
+
   useEffect(() => {
     document.body.style.backgroundColor = '#213ebb';
     const counter = document.getElementById('countdown');
 
-    let startTime = 0; // ✅ 추가: 시작 시각
-    let timeline: PositionSegment[] = []; // ✅ 추가: 구간 배열 전역화
+    let startTime = 0;
+    let timeline: PositionSegment[] = [];
 
     (async () => {
+      await sendDistanceToArduino(propsDistance);
       await window.webgazer.clearData();
       window.webgazer.setRegression('weightedRidge');
       window.webgazer.setSmoothingWindowSize(4);
@@ -50,7 +91,19 @@ const CalibrationPage = () => {
       //   .showFaceOverlay(false)
       //   .showPredictionPoints(true);
 
-      let i = 5;
+      let i = 0;
+
+      if (propsDistance !== null) {
+        const correctedDistance = Math.abs(propsDistance);
+        const speed = propsDistance > 0 ? 3.13 : 2.88;
+        const moveDurationSec = correctedDistance / speed;
+
+        i = Math.ceil(moveDurationSec) + 1;
+
+        console.log(
+          `📏 거리: ${distance}cm → 걸리는 시간: ${moveDurationSec.toFixed(2)}초 → i: ${i}`
+        );
+      }
       const countdown = setInterval(() => {
         if (counter) counter.textContent = `${i}초 후 시작합니다`;
         if (i-- === 0) {
@@ -80,7 +133,7 @@ const CalibrationPage = () => {
         font-size: 20px;
         color: blue;
       }
-              #accuracyDot {
+      #accuracyDot {
         width: 100px;
         height: 100px;
         border-radius: 50%;
@@ -147,9 +200,9 @@ const CalibrationPage = () => {
     let count = 0;
 
     async function recordCalibrationSample(target_x: number, target_y: number) {
-      const perfStart = performance.now(); // ✅ 시작 시각
+      const perfStart = performance.now();
       const data = await window.webgazer.getCurrentPrediction();
-      const perfEnd = performance.now(); // ✅ 끝 시각
+      const perfEnd = performance.now();
       if (!data) return;
 
       const timestamp = perfStart - startTime;
@@ -167,18 +220,14 @@ const CalibrationPage = () => {
         pred_Y: data.y,
         timestamp,
         segmentIndex,
-        latency, // ✅ 추가
+        latency,
       });
-
-      // console.log(
-      //   `${count}번 째 캘리브레이션: ${timestamp.toFixed(1)}ms | 구간: ${segmentIndex} | 지연: ${latency.toFixed(2)}ms`
-      // );
     }
 
     async function startCalibration() {
       dot.style.display = 'block';
       startTime = performance.now();
-      const totalDuration = 30000; // 캘리브레이션 진행 시간
+      const totalDuration = 30000;
       const lengths = positions.map((pos) => distance(pos.from, pos.to));
       const totalLength = lengths.reduce((a, b) => a + b, 0);
 
@@ -194,7 +243,6 @@ const CalibrationPage = () => {
         });
         acc += segDuration;
       }
-      // console.log('📍 Timeline', timeline);
 
       function moveDot() {
         const now = performance.now();
@@ -205,11 +253,6 @@ const CalibrationPage = () => {
           console.table(calibrationLog);
           downloadCSVFromCalibrationLog();
           setCalibrationFinished(true);
-
-          // window.dispatchEvent(
-          //   new CustomEvent('gaze-tracker-toggle', { detail: { active: true } })
-          // );
-          // navigate('/home');
 
           canvas.style.cssText =
             'position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;';
@@ -262,7 +305,7 @@ const CalibrationPage = () => {
             row.pred_Y,
             row.timestamp.toFixed(1),
             row.segmentIndex,
-            row.latency.toFixed(2), // ✅ 추가
+            row.latency.toFixed(2),
           ].join(',')
         ),
       ];
@@ -308,7 +351,6 @@ const CalibrationPage = () => {
     accuracyDot.id = 'accuracyDot';
     document.body.appendChild(accuracyDot);
     if (!accuracyDot) return;
-    // alert('정확도 측정을 시작합니다.\n화면 중앙 점을 5초간 바라보세요.');
 
     const prediction = window.webgazer.getSmoothedPrediction();
     console.log(prediction);
@@ -401,15 +443,13 @@ const CalibrationPage = () => {
           <MessageText>정면의 점을 응시해주세요</MessageText>
           <CountdownText id="countdown">초기화 중입니다...</CountdownText>
         </>
-      ) : accuracyTesting && !accuracyTestDone ? null : accuracyTesting && // 분석 중에는 아무것도 보여주지 않음
+      ) : accuracyTesting && !accuracyTestDone ? null : accuracyTesting &&
         accuracyTestDone ? (
-        // 분석 끝났을 때만 결과 + 홈버튼 표시
         <>
           <ResultText>📊 정확도: {accuracy}%</ResultText>
           <ActionButton onClick={handleGoHome}>홈으로 이동</ActionButton>
         </>
       ) : (
-        // 일반 상태: 분석 전
         <ButtonContainer>
           <ActionButton onClick={handleGoHome}>홈으로 이동</ActionButton>
           <ActionButton onClick={startAccuracyTest}>정확도 분석</ActionButton>
@@ -419,16 +459,6 @@ const CalibrationPage = () => {
     </PageWrapper>
   );
 };
-
-// const PageWrapper = styled.div`
-//   width: 100vw;
-//   height: 100vh;
-//   background-color: #213ebb;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-// `;
 
 const PageWrapper = styled.div<{ isTesting: boolean }>`
   width: 100vw;

@@ -3,17 +3,32 @@ import * as tf from '@tensorflow/tfjs';
 import * as blazeface from '@tensorflow-models/blazeface';
 import styled from '@emotion/styled';
 import Button from '@/components/Common/Button';
+import { setSerialPort } from '@/utils/serialPort';
 
+type SerialPort = {
+  open: (options: { baudRate: number }) => Promise<void>;
+  writable: WritableStream<Uint8Array>;
+  readable: ReadableStream<Uint8Array>;
+  close: () => Promise<void>;
+};
+
+declare global {
+  interface Navigator {
+    serial: {
+      requestPort: () => Promise<SerialPort>;
+    };
+  }
+}
 type FaceRecognitionProps = {
   mode: 'face' | 'calibration';
   setMode: React.Dispatch<React.SetStateAction<'face' | 'calibration'>>;
+  setDistance: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 const REAL_FACE_WIDTH_CM = 16;
 const STEP = 5;
 
-const FaceRecognition = ({ setMode }: FaceRecognitionProps) => {
-  console.log('setMode typeof:', typeof setMode);
+const FaceRecognition = ({ setMode, setDistance }: FaceRecognitionProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const faceCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -82,6 +97,8 @@ const FaceRecognition = ({ setMode }: FaceRecognitionProps) => {
           const px2cm = REAL_FACE_WIDTH_CM / w;
           const dx_cm = (dx_px * px2cm).toFixed(1);
           const dy_cm = (dy_px * px2cm).toFixed(1);
+          console.log('거리값 float로 ', parseInt(dy_cm));
+          setDistance(parseInt(dy_cm));
           octx.fillStyle = '#0f0';
           octx.font = '16px sans-serif';
           octx.fillText(
@@ -89,7 +106,6 @@ const FaceRecognition = ({ setMode }: FaceRecognitionProps) => {
             x1,
             Math.max(y1 - 10, 16)
           );
-
           if (!finished && samples.length < 5 && frameCount % STEP === 0) {
             fctx.drawImage(video, x1, y1, w, h, 0, 0, 224, 224);
             const t = tf.tidy(() =>
@@ -151,6 +167,19 @@ const FaceRecognition = ({ setMode }: FaceRecognitionProps) => {
     };
   }, []);
 
+  async function connect() {
+    try {
+      const selectedPort = await navigator.serial.requestPort();
+      await selectedPort.open({ baudRate: 9600 });
+      const selectedWriter = selectedPort.writable.getWriter();
+      const selectedReader = selectedPort.readable.getReader();
+
+      setSerialPort(selectedPort, selectedWriter, selectedReader);
+    } catch (err) {
+      console.error('❌ 연결 실패:', err);
+    }
+  }
+
   const handleStartClick = () => {
     setMode('calibration');
   };
@@ -185,6 +214,7 @@ const FaceRecognition = ({ setMode }: FaceRecognitionProps) => {
           style={{ display: 'none' }}
         />
       </div>
+      <ConnectButton onClick={connect}>🔌 아두이노 연결</ConnectButton>
     </PageWrapper>
   );
 };
@@ -199,4 +229,22 @@ const PageWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const ConnectButton = styled.button`
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  z-index: 9999;
+  background-color: #ffffffcc;
+  color: #213ebb;
+  border: 1px solid #213ebb;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e6e6e6;
+  }
 `;

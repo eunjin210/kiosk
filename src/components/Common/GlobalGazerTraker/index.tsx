@@ -4,7 +4,6 @@ const GlobalGazeTracker = () => {
   const [isActive, setIsActive] = useState(false);
   const hoverTargetRef = useRef<HTMLElement | null>(null);
   const hoverStartRef = useRef<number | null>(null);
-  // console.log(window.webgazer.addMouseEventListeners.toString());
 
   useEffect(() => {
     const dot = document.createElement('div');
@@ -34,10 +33,6 @@ const GlobalGazeTracker = () => {
         console.log('예측값이 없어요');
         return;
       }
-      // else {
-      //   console.log('예측값');
-      //   console.log(isActive);
-      // }
 
       const x = prediction.x;
       const y = prediction.y;
@@ -61,7 +56,6 @@ const GlobalGazeTracker = () => {
 
         if (el) {
           el.dispatchEvent(new Event('mouseenter', { bubbles: true }));
-          // el.style?.setProperty('outline', '3px solid #00ff00');
         }
         hoverTargetRef.current = el;
         hoverStartRef.current = Date.now();
