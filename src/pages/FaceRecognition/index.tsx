@@ -4,6 +4,8 @@ import * as blazeface from '@tensorflow-models/blazeface';
 import styled from '@emotion/styled';
 import Button from '@/components/Common/Button';
 import { setSerialPort } from '@/utils/serialPort';
+import { useDispatch } from 'react-redux';
+import { setMode } from '@/store/modeSlice';
 
 type SerialPort = {
   open: (options: { baudRate: number }) => Promise<void>;
@@ -21,18 +23,19 @@ declare global {
 }
 type FaceRecognitionProps = {
   mode: 'face' | 'calibration';
-  setMode: React.Dispatch<React.SetStateAction<'face' | 'calibration'>>;
+  setAiMode: React.Dispatch<React.SetStateAction<'face' | 'calibration'>>;
   setDistance: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 const REAL_FACE_WIDTH_CM = 16;
 const STEP = 5;
 
-const FaceRecognition = ({ setMode, setDistance }: FaceRecognitionProps) => {
+const FaceRecognition = ({ setAiMode, setDistance }: FaceRecognitionProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const faceCanvasRef = useRef<HTMLCanvasElement>(null);
   const [finished, setFinished] = useState(false);
+  const [ageAvg, setAgeAvg] = useState<number | null>(null);
 
   const samples: tf.Tensor[] = [];
   let frameCount = 0;
@@ -97,8 +100,10 @@ const FaceRecognition = ({ setMode, setDistance }: FaceRecognitionProps) => {
           const px2cm = REAL_FACE_WIDTH_CM / w;
           const dx_cm = (dx_px * px2cm).toFixed(1);
           const dy_cm = (dy_px * px2cm).toFixed(1);
+
           console.log('거리값 float로 ', parseInt(dy_cm));
           setDistance(parseInt(dy_cm));
+
           octx.fillStyle = '#0f0';
           octx.font = '16px sans-serif';
           octx.fillText(
@@ -139,6 +144,8 @@ const FaceRecognition = ({ setMode, setDistance }: FaceRecognitionProps) => {
             samples.length = 0;
 
             const ageAvg = (ageSum / 3).toFixed(1);
+            setAgeAvg(parseFloat(ageAvg));
+
             const gProb = gSum / 3;
             const gLab = gProb > 0.5 ? 'Male' : 'Female';
             console.log(
@@ -179,15 +186,30 @@ const FaceRecognition = ({ setMode, setDistance }: FaceRecognitionProps) => {
       console.error('❌ 연결 실패:', err);
     }
   }
+  const dispatch = useDispatch();
 
   const handleStartClick = () => {
-    setMode('calibration');
+    if (ageAvg !== null && ageAvg + 20 >= 60) {
+      setAiMode('calibration');
+      dispatch(setMode('simple'));
+    } else {
+      setAiMode('calibration');
+      dispatch(setMode('default'));
+    }
+  };
+
+  const handleEasyStartClick = () => {
+    setAiMode('calibration');
+    dispatch(setMode('simple'));
   };
 
   return (
     <PageWrapper>
       <Button size="xlarge" theme="blue" onClick={() => handleStartClick()}>
-        시작하기
+        일반 모드로 시작
+      </Button>
+      <Button size="xlarge" theme="blue" onClick={() => handleEasyStartClick()}>
+        간편 모드로 시작
       </Button>
       <div style={{ textAlign: 'center' }}>
         <div id="wrap" style={{ position: 'relative', display: 'none' }}>

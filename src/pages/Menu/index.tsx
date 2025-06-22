@@ -9,6 +9,8 @@ import ItemModal from '@/components/feature/ItemModal';
 import Overlay from '@/components/Common/overlay';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { useRef } from 'react';
+
 const MenuPage = () => {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [filter, setFilter] = useState<MenuCategoryType>('COFFEE');
@@ -45,11 +47,37 @@ const MenuPage = () => {
       ? menu
       : menu.filter((item) => item.category === filter.toLowerCase());
 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(false);
+
+  useEffect(() => {
+    fetch('/mock/menuData.json')
+      .then((res) => res.json())
+      .then((data) => setMenu(data));
+  }, []);
+
+  const handleScroll = () => {
+    const el = contentRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+    setIsAtBottom(nearBottom);
+  };
+
+  const scrollTo = () => {
+    const el = contentRef.current;
+    if (!el) return;
+    if (isAtBottom) {
+      el.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    }
+  };
+
   return (
     <Wrapper>
       <Header />
       <MenuNavbar currentFilter={filter} setFilter={setFilter} />
-      <Content>
+      <Content ref={contentRef} onScroll={handleScroll}>
         <CommonGrid
           columns={columns}
           gap={'2rem'}
@@ -57,22 +85,20 @@ const MenuPage = () => {
         >
           {filteredMenu.map((item) => (
             <ItemBox key={item.id} onClick={() => handleCardClick(item)}>
-              <img
-                src={item.img}
-                alt={item.name}
-                style={{
-                  width: '100%',
-                  height: '260px',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                }}
-              />
+              <ItemImage src={item.img} alt={item.name} mode={selectType} />
               <Name mode={selectType}>{item.name}</Name>
               <Price mode={selectType}>{item.price}원</Price>
             </ItemBox>
           ))}
         </CommonGrid>
       </Content>
+      <ScrollButton onClick={scrollTo}>
+        {isAtBottom ? (
+          <ScrollImg src="/up.svg" />
+        ) : (
+          <ScrollImg src="/down.svg" />
+        )}
+      </ScrollButton>
       {isModalOpen && (
         <>
           <ItemModal
@@ -99,6 +125,7 @@ const Wrapper = styled.div`
 `;
 const Content = styled.main`
   width: 100%;
+  position: relative;
   max-height: 60vh;
   overflow-y: auto;
   display: flex;
@@ -115,7 +142,7 @@ const Content = styled.main`
 `;
 
 const ItemBox = styled.div`
-  width: 80%;
+  width: 90%;
   background-color: white;
   border-radius: 12px;
   padding: 1rem;
@@ -138,15 +165,61 @@ const ItemBox = styled.div`
   }
 `;
 
+const ItemImage = styled.img<{ mode: 'default' | 'simple' }>`
+  width: 100%;
+  height: ${({ mode }) => (mode === 'simple' ? '340px' : '260px')};
+  object-fit: contain;
+  border-radius: 8px;
+
+  @media (max-width: 768px) {
+    height: ${({ mode }) => (mode === 'simple' ? '280px' : '220px')};
+  }
+`;
+
 const Name = styled.h4<{ mode: 'default' | 'simple' }>`
-  font-size: ${(props) => (props.mode === 'default' ? '1rem' : '1.8rem')};
+  font-size: ${(props) => (props.mode === 'default' ? '1.5rem' : '1.8rem')};
   color: black;
   margin: 0;
 `;
 
 const Price = styled.p<{ mode: 'default' | 'simple' }>`
-  font-size: ${(props) => (props.mode === 'default' ? '1rem' : '1.8rem')};
+  font-size: ${(props) => (props.mode === 'default' ? '1.5  rem' : '1.8rem')};
   color: ${(props) => (props.mode === 'default' ? 'black' : '#007aff')};
   font-weight: ${(props) => (props.mode === 'default' ? 'none' : 'bold')};
   margin: 10px;
+`;
+
+const ScrollButton = styled.button`
+  position: fixed;
+  right: 2rem;
+  bottom: 40rem;
+  width: 130px;
+  height: 130px;
+  background-color: #white;
+  font-size: 1.5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  &:hover {
+    color: white;
+    border: none;
+  }
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+`;
+
+const ScrollImg = styled.img`
+  width: 150px;
+  height: 150px;
+  color="#213ebb"
 `;

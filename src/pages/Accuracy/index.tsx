@@ -8,12 +8,6 @@ type Point = {
   timestamp: number;
 };
 
-// declare global {
-//   interface Window {
-//     webgazer: any; // WebGazer.js는 타입이 없기 때문에 any로 처리 (또는 @types/webgazer 사용)
-//   }
-// }
-
 const AccuracyPage = () => {
   const dotRef = useRef<HTMLDivElement | null>(null);
   const [calibrationFinished, setCalibrationFinished] = useState(false);

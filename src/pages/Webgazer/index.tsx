@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { writer, reader } from '@/utils/serialPort.ts';
+import LandingPage from '../Landing';
 
 type SerialPort = {
   open: (options: { baudRate: number }) => Promise<void>;
@@ -23,9 +24,9 @@ interface CalibrationData {
   target_Y: number;
   pred_X: number;
   pred_Y: number;
-  timestamp: number; // ✅ 추가
-  segmentIndex: number; // ✅ 추가
-  latency: number; // ✅ 추가: 예측값 얻는데 걸린 시간 (ms)
+  timestamp: number;
+  segmentIndex: number;
+  latency: number;
 }
 
 interface PositionSegment {
@@ -86,10 +87,10 @@ const CalibrationPage = ({ distance: propsDistance }: CalibrationPageProps) => {
       await window.webgazer.begin();
       console.log('✅ WebGazer 초기화 완료');
 
-      // window.webgazer
-      //   .showVideo(false)
-      //   .showFaceOverlay(false)
-      //   .showPredictionPoints(true);
+      window.webgazer;
+      // .showVideo(false)
+      // .showFaceOverlay(false)
+      // .showPredictionPoints(true);
 
       let i = 0;
 
@@ -170,20 +171,20 @@ const CalibrationPage = ({ distance: propsDistance }: CalibrationPageProps) => {
     const margin = 50;
     const positions: { from: [number, number]; to: [number, number] }[] = [
       {
-        from: [w - margin, margin], // 오른쪽 위 시작
-        to: [w - margin, h - margin], // ↓ 오른쪽 아래
+        from: [w - margin, margin],
+        to: [w - margin, h - margin],
       },
       {
         from: [w - margin, h - margin],
-        to: [margin, h - margin], // ← 왼쪽 아래
+        to: [margin, h - margin],
       },
       {
         from: [margin, h - margin],
-        to: [margin, margin], // ↑ 왼쪽 위
+        to: [margin, margin],
       },
       {
         from: [margin, margin],
-        to: [w - margin, margin], // → 다시 오른쪽 위
+        to: [w - margin, margin],
       },
     ];
 
@@ -251,7 +252,8 @@ const CalibrationPage = ({ distance: propsDistance }: CalibrationPageProps) => {
         if (elapsed >= totalDuration) {
           dot.style.display = 'none';
           console.table(calibrationLog);
-          downloadCSVFromCalibrationLog();
+          // downloadCSVFromCalibrationLog();
+          // 캘리브레이션 후 csv 저장하는 코드 비활성화
           setCalibrationFinished(true);
 
           canvas.style.cssText =
@@ -450,11 +452,13 @@ const CalibrationPage = ({ distance: propsDistance }: CalibrationPageProps) => {
           <ActionButton onClick={handleGoHome}>홈으로 이동</ActionButton>
         </>
       ) : (
-        <ButtonContainer>
-          <ActionButton onClick={handleGoHome}>홈으로 이동</ActionButton>
-          <ActionButton onClick={startAccuracyTest}>정확도 분석</ActionButton>
-          {accuracy && <ResultText>📊 정확도: {accuracy}%</ResultText>}
-        </ButtonContainer>
+        // <ButtonContainer>
+        //   <ActionButton onClick={handleGoHome}>홈으로 이동</ActionButton>
+        //   <ActionButton onClick={startAccuracyTest}>정확도 분석</ActionButton>
+        //   {accuracy && <ResultText>📊 정확도: {accuracy}%</ResultText>}
+        // </ButtonContainer>
+        // 정확도 분석시 위 코드 주석 제거, <LandingPage /> 주석 처리 하려 실행
+        <LandingPage />
       )}
     </PageWrapper>
   );

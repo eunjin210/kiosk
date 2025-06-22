@@ -9,7 +9,7 @@ const FaceGazeSetupPage = () => {
       {mode === 'face' ? (
         <FaceRecognition
           mode={mode}
-          setMode={setMode}
+          setAiMode={setMode}
           setDistance={setDistance}
         />
       ) : (

@@ -84,34 +84,29 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
     <>
       <Overlay isOpen={isModalOpen} />
       <ModalContainer>
-        <img
-          src={selectedItem.img}
-          style={{
-            width: 'auto',
-            height: '30%',
-            objectFit: 'contain',
-            alignSelf: 'center',
-          }}
-        />
+        <MenuImage src={selectedItem.img} simpleMode={mode === 'simple'} />
         <InfoRow>
-          <MenuName>{selectedItem.name}</MenuName>
+          <MenuName simpleMode={mode === 'simple'}>
+            {selectedItem.name}
+          </MenuName>
           <QuantityBox>
             <QuantityButton onClick={decrease} style={{ cursor: 'pointer' }}>
               –
             </QuantityButton>
-            <span style={{ color: 'black' }}>{quantity}</span>
+            <Quantity simpleMode={mode === 'simple'}>{quantity}</Quantity>
             <QuantityButton onClick={increase} style={{ cursor: 'pointer' }}>
               +
             </QuantityButton>
           </QuantityBox>
-          <Price>{selectedItem.price}원</Price>
+          <Price simpleMode={mode === 'simple'}>{selectedItem.price}원</Price>
         </InfoRow>
         {selectedItem.option?.temperature && (
           <OptionRow>
-            <Label>온도 :</Label>
+            <Label simpleMode={mode === 'simple'}>온도 :</Label>
             <TempOptionRow>
               {selectedItem.option.temperature.map((temp) => (
                 <TempButton
+                  simpleMode={mode === 'simple'}
                   key={temp}
                   active={selectedTemp === temp}
                   onClick={() => setSelectedTemp(temp)}
@@ -125,16 +120,20 @@ const ItemModal = ({ isModalOpen, selectedItem, handleModalClose }: Props) => {
         )}
         {selectedItem.option?.size && (
           <OptionRow>
-            <Label>사이즈 :</Label>
+            <Label simpleMode={mode === 'simple'}>사이즈 :</Label>
             <TempOptionRow>
               {selectedItem.option.size.map((sz) => (
                 <SizeBox
                   key={sz}
                   active={selectedSize === sz}
                   onClick={() => setSelectedSize(sz)}
+                  simpleMode={mode === 'simple'}
                 >
-                  <img src="/icon _coffee cup_.svg" width={50} />
-                  <span>{getSizeLabel(sz)}</span>
+                  <CupIcon
+                    src="/icon _coffee cup_.svg"
+                    simpleMode={mode === 'simple'}
+                  />
+                  <Size simpleMode={mode === 'simple'}>{getSizeLabel(sz)}</Size>
                 </SizeBox>
               ))}
             </TempOptionRow>
@@ -161,8 +160,8 @@ const ModalContainer = styled.div`
   flex-direction: column;
   z-index: 999;
   background-color: white;
-  width: 60vw;
-  height: 60vh;
+  width: 70vw;
+  height: 70vh;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -174,6 +173,12 @@ const ModalContainer = styled.div`
     display: none;
   }
 `;
+const MenuImage = styled.img<{ simpleMode: boolean }>`
+  width: auto;
+  height: ${({ simpleMode }) => (simpleMode ? '30%' : '30%')};
+  object-fit: contain;
+  align-self: center;
+`;
 const InfoRow = styled.div`
   display: flex;
   align-items: center;
@@ -182,15 +187,15 @@ const InfoRow = styled.div`
   margin-bottom: 2rem;
 `;
 
-const MenuName = styled.div`
-  font-size: 1.5rem;
+const MenuName = styled.div<{ simpleMode: boolean }>`
+  font-size: ${({ simpleMode }) => (simpleMode ? '3rem' : '1.5rem')};
   color: black;
   font-weight: bold;
 `;
 
 const QuantityButton = styled.span`
-  font-size: 1.3rem;
-  width: 1.7rem;
+  font-size: 3.5rem;
+  width: 4.5rem;
   font-weight: bold;
   color: white;
   background-color: orange;
@@ -204,10 +209,15 @@ const QuantityBox = styled.div`
   font-size: 1.5rem;
   align-items: center;
 `;
-
-const Price = styled.div`
+const Quantity = styled.div<{ simpleMode: boolean }>`
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: ${({ simpleMode }) => (simpleMode ? '3rem' : '1.5rem')};
+  color: black;
+`;
+
+const Price = styled.div<{ simpleMode: boolean }>`
+  font-weight: bold;
+  font-size: ${({ simpleMode }) => (simpleMode ? '3rem' : '1.5rem')};
   color: #007aff;
 `;
 
@@ -220,7 +230,11 @@ const OptionRow = styled.div`
   padding: 0 5rem;
 `;
 
-const TempButton = styled.button<{ active: boolean; color: string }>`
+const TempButton = styled.button<{
+  active: boolean;
+  color: string;
+  simpleMode: boolean;
+}>`
   font-weight: bold;
   border: 2px solid ${({ color }) => color};
   color: ${({ color }) => color};
@@ -229,12 +243,13 @@ const TempButton = styled.button<{ active: boolean; color: string }>`
   padding: 0.5rem 1.2rem;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 2rem;
+  font-size: ${({ simpleMode }) => (simpleMode ? '4rem' : '1.5rem')};
+  margin-left: 1rem;
 `;
 
-const Label = styled.div`
+const Label = styled.div<{ simpleMode: boolean }>`
   color: black;
-  font-size: 1.3rem;
+  font-size: ${({ simpleMode }) => (simpleMode ? '3rem' : '1.5rem')};
   font-weight: bold;
   margin-right: 1rem;
 `;
@@ -260,9 +275,9 @@ const ButtonWrapper = styled.div`
   margin-top: 2rem;
 `;
 
-const SizeBox = styled.div<{ active: boolean }>`
+const SizeBox = styled.div<{ active: boolean; simpleMode: boolean }>`
   border: 2px solid ${({ active }) => (active ? '#007aff' : '#ccc')};
-  width: 4rem;
+  width: ${({ simpleMode }) => (simpleMode ? '10rem' : '5rem')};
   height: auto;
   padding: 0.5rem;
   border-radius: 8px;
@@ -278,6 +293,18 @@ const SizeBox = styled.div<{ active: boolean }>`
     font-weight: bold;
     margin-top: 0.3rem;
   }
+`;
+
+const CupIcon = styled.img<{ simpleMode: boolean }>`
+  width: ${({ simpleMode }) => (simpleMode ? '80px' : '50px')};
+  height: auto;
+`;
+
+const Size = styled.div<{ simpleMode: boolean }>`
+  color: black;
+  font-size: ${({ simpleMode }) => (simpleMode ? '2rem' : '1.5rem')};
+  font-weight: bold;
+  margin-right: 1rem;
 `;
 
 const Warning = styled.div`

@@ -16,7 +16,7 @@ const categoryPairs: [MenuCategoryType, string][] = [
 const MenuNavbar = ({ currentFilter, setFilter }: Props) => {
   const selectType = useSelector((state: RootState) => state.mode);
   return (
-    <Wrapper>
+    <Wrapper type={selectType === 'simple'}>
       <ScrollContainer>
         {categoryPairs.map(([eng, kor]) => (
           <CategoryButton
@@ -35,9 +35,9 @@ const MenuNavbar = ({ currentFilter, setFilter }: Props) => {
 
 export default MenuNavbar;
 
-const Wrapper = styled.header`
+const Wrapper = styled.header<{ type: boolean }>`
   width: 100vw;
-  height: 3rem;
+  height: ${({ type }) => (type ? '3.6rem' : '3rem')};
   background-color: white;
   display: flex;
   align-items: center;
@@ -95,7 +95,7 @@ const CategoryButton = styled.button<{ selectType: 'default' | 'simple' }>`
   color: black;
 
   font-size: ${({ selectType }) =>
-    selectType === 'simple' ? '2rem' : 'clamp(1rem, 3vw, 1.5rem)'};
+    selectType === 'simple' ? '3rem' : '1.5rem'};
 
   &.active {
     background-color: #213ebb;

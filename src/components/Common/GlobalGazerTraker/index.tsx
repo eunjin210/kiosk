@@ -27,13 +27,13 @@ const GlobalGazeTracker = () => {
         typeof window.webgazer.getSmoothedPrediction !== 'function'
       )
         return;
+
       const prediction = window.webgazer.getSmoothedPrediction();
 
       if (!prediction) {
         console.log('예측값이 없어요');
         return;
       }
-
       const x = prediction.x;
       const y = prediction.y;
 
@@ -46,6 +46,8 @@ const GlobalGazeTracker = () => {
         prediction.y
       ) as HTMLElement | null;
 
+      // document.elementFromPoint(x, y) 브라우저 내장 api로 좌표에 위치한 요소 반환
+
       if (el !== hoverTargetRef.current) {
         if (hoverTargetRef.current) {
           hoverTargetRef.current.dispatchEvent(
@@ -56,6 +58,7 @@ const GlobalGazeTracker = () => {
 
         if (el) {
           el.dispatchEvent(new Event('mouseenter', { bubbles: true }));
+          console.log('👁️ 시선이 올라간 요소:', el);
         }
         hoverTargetRef.current = el;
         hoverStartRef.current = Date.now();
@@ -67,7 +70,7 @@ const GlobalGazeTracker = () => {
         el.click();
         hoverStartRef.current = null;
       }
-    }, 100);
+    }, 50);
 
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;

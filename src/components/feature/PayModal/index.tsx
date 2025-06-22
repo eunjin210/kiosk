@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearCart } from '@/store/cartSlice';
-
+import Button from '@/components/Common/Button';
 type Props = {
   isModalOpen: boolean;
   handleModalClose: () => void;
@@ -57,6 +57,16 @@ const PayModal = ({ isModalOpen, handleModalClose }: Props) => {
                 <Text>카드 결제</Text>
               </ButtonWrapper>
             </Wrapper>
+            <BackWrapper>
+              <Button
+                size="large"
+                theme="blue"
+                onClick={handleModalClose}
+                style={{ padding: '1rem 4rem' }}
+              >
+                되돌아가기
+              </Button>
+            </BackWrapper>
           </>
         )}
       </ModalContainer>
@@ -155,4 +165,12 @@ const CheckImage = styled.img`
 const Text = styled.div`
   font-size: 3rem;
   color: black;
+`;
+
+const BackWrapper = styled.div`
+  width: 70%; /* 원하는 너비로 */
+  margin: 2rem auto 0 auto; /* 상단 여백 + 좌우 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

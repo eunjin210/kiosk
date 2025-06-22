@@ -4,9 +4,16 @@ import Button from '@/components/Common/Button';
 import Header from '@/components/Common/Header';
 import { useDispatch } from 'react-redux';
 import { setMode } from '@/store/modeSlice';
+import { useEffect } from 'react';
 
 const LandingPage = () => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent('gaze-tracker-toggle', { detail: { active: true } })
+    );
+  }, []);
 
   return (
     <Wrapper>
@@ -29,15 +36,6 @@ const LandingPage = () => {
           포장해서 갈래요
         </Button>
       </Link>
-      {/* <Link to="/accuracy">
-        <Button
-          size="xlarge"
-          theme="blue"
-          onClick={() => dispatch(setMode('simple'))}
-        >
-          정확도 분석
-        </Button>
-      </Link> */}
     </Wrapper>
   );
 };
